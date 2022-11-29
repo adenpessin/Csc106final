@@ -15,8 +15,8 @@ Button.prototype.draw = function() //button draw function
     rect(this.x, this.y, this.width, this.height, 5);
     fill(0, 0, 0);
     textSize(15);
-    textAlign(LEFT, TOP);
-    text(this.butText, this.x+13, this.y+(this.height/2)-10);
+    textAlign(CENTER, TOP);
+    text(this.butText, this.x+26, this.y+(this.height/2)-10);
 };
 Button.prototype.isMouseInside = function() //determines if the mouse is over a button
 {
