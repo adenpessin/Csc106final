@@ -14,7 +14,7 @@ Button.prototype.draw = function() //button draw function
     fill(this.color);
     rect(this.x, this.y, this.width, this.height, 5);
     fill(0, 0, 0);
-    textSize(14);
+    textSize(15);
     textAlign(LEFT, TOP);
     text(this.butText, this.x+13, this.y+(this.height/2)-10);
 };
@@ -33,6 +33,10 @@ Button.prototype.handleMouseClick = function()
         this.onClick();
     }
 };
+
+var a = null;// num 1 in calculation
+var b = null;// num 2 in calculation
+var z = null; // defines what happens to the num (+,-,/,*)
 var butSymbols = ["1","2","3","+","4","5","6","-", "7","8","9","*","Clear","0","=","÷" ];
 var calcButtons = [];
 for (var i = 0; i <= 3; i++)
@@ -54,7 +58,7 @@ for (var i = 0; i <= 3; i++)
 
 calcButtons[0].onClick = function() // "1" button
 {
-    
+
 };
 draw = function() 
 {
