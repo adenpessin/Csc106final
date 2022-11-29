@@ -1,0 +1,67 @@
+var Button = function(config) //button contructor
+{
+    this.x = config.x || 0;
+    this.y = config.y || 0;
+    this.width = config.width || 50;
+    this.height = config.height || 50;
+    this.butText = config.butText || "Click";
+    this.color = config.color || color(255, 255, 255);
+    this.onClick = config.onClick || function() {};
+};
+Button.prototype.draw = function() //button draw function
+{
+    rectMode(LEFT);
+    fill(this.color);
+    rect(this.x, this.y, this.width, this.height, 5);
+    fill(0, 0, 0);
+    textSize(14);
+    textAlign(LEFT, TOP);
+    text(this.butText, this.x+13, this.y+(this.height/2)-10);
+};
+Button.prototype.isMouseInside = function() //determines if the mouse is over a button
+{
+    return mouseX > this.x &&
+           mouseX < (this.x + this.width) &&
+           mouseY > this.y &&
+           mouseY < (this.y + this.height);
+};
+Button.prototype.handleMouseClick = function() 
+/* checks isMouseInside if yes, runs the onClick function */
+{
+    if (this.isMouseInside()) 
+    {
+        this.onClick();
+    }
+};
+var butSymbols = ["1","2","3","+","4","5","6","-", "7","8","9","*","Clear","0","=","÷" ];
+var calcButtons = [];
+for (var i = 0; i <= 3; i++)
+{
+    for (var j = 0; j <= 3; j++)
+    {
+        var calculatorButtons = new Button
+        ({
+            x: 60+68 * i,
+            y: 127+62 * j,
+            width: 50,
+            height: 50,
+            color: color(232, 217, 14),
+            butText: butSymbols[i+j*4],
+        });
+        calcButtons.push(new Button(calculatorButtons));
+    }
+}
+
+calcButtons[0].onClick = function() // "1" button
+{
+    
+};
+draw = function() 
+{
+    fill(161, 155, 155);
+    rect(60,10,260,76);
+    for (var i = 0; i < calcButtons.length; i++)
+    {
+        calcButtons[i].draw();
+    }
+};
