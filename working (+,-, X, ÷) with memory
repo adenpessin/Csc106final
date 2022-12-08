@@ -113,6 +113,22 @@ var arrayMult = function(a)//multiply function
     }
     return product;
 };
+var arrayDiv = function(a)
+{
+    var quotient = 0;
+    for (var i = 0; i < a.length; i++)
+    {
+        if (i === 0)
+        {
+            quotient = a[i];
+        }
+        else 
+        {
+            quotient = quotient /= a[i];
+        }
+    }
+    return quotient;
+};
 var arrayCombineIntoNum = function(a)//each button pushs individual digits into array. they are the put into 1 number using this function EX: [4,5,3,5] --> 4,535
 {
     var finalNum = 0;
@@ -285,6 +301,17 @@ calcButtons[11].onClick = function() // "=" button
         pastAnswer = answer;
         valuesOfInput = [];
     }
+    else if (z === 4)
+    {
+        valuesOfInput.push(arrayCombineIntoNum(numInput));
+        a = 0;
+        b = 0;
+        z = 0;
+        numInput = [];
+        answer = arrayDiv(valuesOfInput);
+        pastAnswer = answer;
+        valuesOfInput = [];
+    }
 };
 calcButtons[12].onClick = function() // "+" button
 {
@@ -374,7 +401,31 @@ calcButtons[14].onClick = function() // "X" button
 };
 calcButtons[15].onClick = function() // "Divide" button
 {
-    //come back to this later
+    if (z === 0 && pastAnswer !== 0)
+    {
+        valuesOfInput.push(pastAnswer);
+        numInput = [];
+        a = 0;
+        z = 4;
+        answer = null;
+    }
+    else if (z === 0)
+    {
+        valuesOfInput.push(arrayCombineIntoNum(numInput));
+        //println(valuesOfInput[0]);
+        numInput = [];
+        a = 0;
+        z = 4;
+        answer = null;
+    }
+    else if (z === 4)
+    {
+        valuesOfInput.push(arrayCombineIntoNum(numInput));
+        numInput = [];
+        b = 0;
+        a = 0;
+        answer = null;
+    }
 };
 draw = function() 
 {
