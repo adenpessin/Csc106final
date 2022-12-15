@@ -14,9 +14,9 @@ Button.prototype.draw = function() //button draw function
     fill(this.color);
     rect(this.x, this.y, this.width, this.height, 5);
     fill(0, 0, 0);
-    textSize(20);
+    textSize(26);
     textAlign(CENTER, TOP);
-    text(this.butText, this.x+36, this.y+(this.height/2)-10);
+    text(this.butText, this.x+50, this.y+(this.height/2)-12);
 };
 Button.prototype.isMouseInside = function() //determines if the mouse is over a button
 {
@@ -41,13 +41,16 @@ var z = 0; // defines what happens to the num (+,-,/,*) 'OPERATION'
 0=nothing, 1 = add, 2 = subtract, 3 = times, 4 = divide, 5 = equal, 6 = clear
 */
 var butSymbols = ["1","2","3","+","4","5","6","-","7","8","9","×","Clear", "0" ,"=","÷" ];
-var butValues = [1,2,3,"+",4,5,6,"-", 7,8,9,"*","Clear", 0 ,"=","÷" ];/*keep symbols so it lines up with the other array*/
+var butValues = [1,2,3,"+",4,5,6,"-",7,8,9,"*","Clear",0,"=","÷"];/*keep symbols so it lines up with the other array*/
 var calcButtons = [];//where the buttons are stored and called from
+var numInput = [];//individual digits pushed by clicking numbers
+var valuesOfInput = [];//the full numbers which will be used in equation
+var answer = null;
 var pastAnswer = 0;//allows memory of the previous answer
+var keepAShown = false;
+var keepPastAnswerShown = false;
 var defOpColors = {r:129,g:206, b:227}; //default op colors
-var wasOpPressed = false;//if true, triggers change in color of op
-
-// tells if a operator was just pressed, triggers function to darken the color of the tile temporarily
+var wasOpPressed = false;//if true, triggers change in color of op.
 
 for (var i = 0; i <= 3; i++) //creates buttons
 {
@@ -55,10 +58,10 @@ for (var i = 0; i <= 3; i++) //creates buttons
     {
         var calculatorButtons = new Button
         ({
-            x: 56 + 109 * i,
-            y: 108 + 109 * j,
-            width: 105,
-            height: 105,
+            x: 76 + 112 * i,
+            y: 115 + 112 * j,
+            width: 110,
+            height: 110,
             butText: butSymbols[i+j*4],
             color:color(defOpColors.r,defOpColors.g,defOpColors.b),
         });
@@ -67,16 +70,16 @@ for (var i = 0; i <= 3; i++) //creates buttons
 }
 for (var i = 0; i <= 10; i++)//turns number buttons a color, clear button seperate
 { 
-    if (i !== 3)
+    if (i !== 3)//if not clear button, give gray
     {
         calcButtons[i].color = color(145, 136, 140);
     }
-    else
+    else//if clear button give orange
     {
-        calcButtons[i].color = color(79, 219, 28);
+        calcButtons[i].color = color(212, 151, 45);
     }
 }
-var arrayAdd = function(a)//will be used to add up chosen numbers, as the symbols arent numbers techniqually terrible spelling there whatever 
+var arrayAdd = function(a)//will be used to add up chosen numbers in an array
 {
     var sumOfInputs = 0;
     for (var i = 0; i < a.length; i++)
@@ -96,7 +99,7 @@ var arraySub = function(a) //subtraction function
         }
         else
         {
-            difOfInputs = difOfInputs-a[i];
+            difOfInputs -= a[i];
         }
     }
     return difOfInputs;
@@ -112,12 +115,12 @@ var arrayMult = function(a)//multiply function
         }
         else 
         {
-            product = product *= a[i];
+            product *= a[i];
         }
     }
     return product;
 };
-var arrayDiv = function(a)
+var arrayDiv = function(a)// dividing function
 {
     var quotient = 0;
     for (var i = 0; i < a.length; i++)
@@ -128,7 +131,7 @@ var arrayDiv = function(a)
         }
         else 
         {
-            quotient = quotient /= a[i];
+            quotient /= a[i];
         }
     }
     return quotient;
@@ -160,23 +163,19 @@ mouseClicked = function()//mouseclicked function
         calcButtons[i].handleMouseClick();
     }
 };
-var numInput = [];//individual digits pushed by clicking numbers
-var valuesOfInput = [];//the full numbers which will be used in equation
-var answer = null;
-var keepAShown = false;
-var keepPastAnswerShown = false;
 
-var numButFunction = function(bIndex,bValue)
+var numButFunction = function(bIndex,bValue)//ADD MORE COMMENTS
 {
-    wasOpPressed = false;
-    keepAShown = false;
-    keepPastAnswerShown = false;
+    wasOpPressed = false;//resets the darkop buttons
+    keepAShown = false;//takes away so it can display whats typed
+    keepPastAnswerShown = false;//same as y keepAshown gets false
+    answer = null;
     if (z === 0 && pastAnswer !== 0)
     {
         pastAnswer = 0;
-    }
-    answer = null;
-    if (z === 0 && pastAnswer === 0) // if a operator has not been pressed
+    }/*if no operator is active, but there is a pastAnswer, reset pastAnswer to 0, because these are the number buttons, past answer only matters when an op is pressed right after "=" is pressed */
+    
+    if (z === 0 && pastAnswer === 0) 
     {
         if (a === 0)
         {
@@ -188,7 +187,15 @@ var numButFunction = function(bIndex,bValue)
             a = a + calcButtons[bIndex].butText;
             numInput.push(bValue);
         }
-    }
+    }/*if an operator has not been pressed, and theres no
+    pastAnswer, meaning its the first time running, or clear was
+    pressed, 2 things can then happen. if variable a hasnt been set
+    to anything, a will become the text displayed, while also
+    pushing the numerical value of whatever text it is, into
+    another array to be used later. if a isnt 0, a adds on the
+    symbol of the next # button pressed, and pushing a new
+    numerical value into array. the combine into number function 
+    takes that seperate array to get the full number*/
     else if (z === 0 && pastAnswer !== 0)
     {
         a = pastAnswer;
@@ -202,7 +209,9 @@ var numButFunction = function(bIndex,bValue)
             b = b + calcButtons[bIndex].butText;
             numInput.push(bValue);
         }
-    }
+    } /* same conditional as the first in this function, but after
+    a has been declared by the user, the next set of numbers in a
+    mathematical function are going to be the variable b. */
     else if (z > 0)
     {
         if (b === 0)
@@ -215,7 +224,7 @@ var numButFunction = function(bIndex,bValue)
             b = b + calcButtons[bIndex].butText;
             numInput.push(bValue);
         }
-    }
+    }/* if z isnt 0, meaning an operator is active, the number pressed will go to b, as variable a is already filled*/
 };
 calcButtons[0].onClick = function() // "1" button
 {
@@ -231,17 +240,16 @@ calcButtons[2].onClick = function() // "7" button
 };
 calcButtons[3].onClick = function() // "Clear" button
 {
-    //add more later
-    numInput = [];
-    valuesOfInput = [];
-    pastAnswer = 0;
-    answer = null;
-    a = 0;
-    b = 0;
-    z = 0;
-    keepPastAnswerShown = false;
-    keepAShown = false;
-    wasOpPressed = false;
+    numInput = [];//resets
+    valuesOfInput = [];//resets
+    pastAnswer = 0;//resets
+    answer = null;//resets
+    a = 0;//resets
+    b = 0;//resets
+    z = 0;//resets
+    keepPastAnswerShown = false;//resets
+    keepAShown = false;//resets
+    wasOpPressed = false;//resets
 };
 calcButtons[4].onClick = function() // "2" button
 {
@@ -288,29 +296,28 @@ calcButtons[11].onClick = function() // "=" button
     wasOpPressed = true;
     if (z === 0)
     {
+        //empty, nothing needs to happen
     }
     else if (z === 1)
     {
-        runOp(arrayAdd);
+        runOp(arrayAdd);//adds values of inputs together
     }
     else if (z === 2)
     {
-        runOp(arraySub);
+        runOp(arraySub);//subtracts values of inputs
     }
     else if (z === 3)
     {
-        runOp(arrayMult);
+        runOp(arrayMult);//multiplys values of inputs
     }
     else if (z === 4)
     {
-        runOp(arrayDiv);
+        runOp(arrayDiv);//divides values of inputs
     }
 };
 calcButtons[12].onClick = function() // "+" button
 {
-    //come back to this later
-    //put all input numbers into one number
-    wasOpPressed = true;
+    wasOpPressed = true;//allows color change
     if (z === 0 && pastAnswer !== 0)
     {
         valuesOfInput.push(pastAnswer);
@@ -319,7 +326,8 @@ calcButtons[12].onClick = function() // "+" button
         z = 1;
         answer = null;
         keepPastAnswerShown = true;
-    }
+    }/*after "=" pressed, theres a past answer is pushed to values
+    of input*/
     else if (z === 0)
     {
         valuesOfInput.push(arrayCombineIntoNum(numInput));
@@ -328,7 +336,9 @@ calcButtons[12].onClick = function() // "+" button
         z = 1;
         answer = null;
         keepAShown = true;
-    }
+    }/* pushes numInput through combineIntoNum, pushing that into
+    values of input, sets z=1 to tell that their abt to add, keeps
+    a shown so user can see it */
     else if (z === 1)
     {
         valuesOfInput.push(arrayCombineIntoNum(numInput));
@@ -434,9 +444,21 @@ calcButtons[15].onClick = function() // "Divide" button
 var calcNumDisplay = function(x,y)
 {
     var displayWhat;
+    var sNotation = function (num)
+    {
+        if (num <= 10000000)
+        {
+            return num;
+        }
+        else if (num > 10000000)
+        {
+            return num.toExponential();
+        }
+    }; //numbers larger than 10 mil turned to scientific notation
+    
     if (answer !== null)
     {
-        displayWhat = answer;
+        displayWhat = sNotation(answer);
     }
     if ( a !== 0 )
     {
@@ -466,14 +488,29 @@ var changeOpColor = function ()//changes the color of the op buttons so user can
 {
     var whichOpPressed = function(index)
     {
-        calcButtons[index].color = color(defOpColors.r-50,defOpColors.g-50,defOpColors.b-50);
-            calcButtons[11].color = color(defOpColors.r, defOpColors.g, defOpColors.b);//makes sure "=" goes back to normal
-    };//lowers colors,resets "=" color
+        calcButtons[index].color = color
+        (
+            defOpColors.r-50,
+            defOpColors.g-50,
+            defOpColors.b-50
+        ); //darkens color
+        calcButtons[11].color = color
+        (
+            defOpColors.r,
+            defOpColors.g,
+            defOpColors.b
+        );//makes sure "=" goes back to normal
+    };//darkens colors, resets "=" color
     if (wasOpPressed === true)
     {
         if (z === 0)// "=" pressed
         {
-            calcButtons[11].color = color(defOpColors.r-50,defOpColors.g-50,defOpColors.b-50);
+            calcButtons[11].color = color
+            (
+                defOpColors.r-50,
+                defOpColors.g-50,
+                defOpColors.b-50
+            );
         }
         else if (z === 1)
         {
@@ -496,21 +533,29 @@ var changeOpColor = function ()//changes the color of the op buttons so user can
     {
         for (var i = 11; i <= 15; i++)
         {
-            calcButtons[i].color = color(defOpColors.r, defOpColors.g, defOpColors.b);
+            calcButtons[i].color = color
+            (
+                defOpColors.r,
+                defOpColors.g,
+                defOpColors.b
+            );
         }
     }
 };
 draw = function() 
 {
+    strokeWeight(5);//adds lines around everything
+    fill(120, 4, 4);//red background color
+    rect(2, 2, 595,595);//background square so black border shows
     for (var i = 0; i < calcButtons.length; i++)
     {
         calcButtons[i].draw();
-    }
-    fill(161, 155, 155);
-    rect(60,10,420,76);
+    }//draws buttons
+    fill(79, 75, 75);// dark grey color for answer box
+    rect(79,10,440,76);//answer box
     textSize(20);
-    fill(255, 255, 255);
-    textAlign(RIGHT,CENTER);
-    calcNumDisplay(470,47);
-    changeOpColor();
+    fill(255, 255, 255);//white text color
+    textAlign(RIGHT,CENTER);//makes text appear like a calc
+    calcNumDisplay(508,47);//displays what needs to be shown(x,y)
+    changeOpColor();//function for changing the op color 
 };
