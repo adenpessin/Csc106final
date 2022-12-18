@@ -711,7 +711,6 @@ calcButtons[14].onClick = function() // "X" button
     else if (z === 0)
     {
         valuesOfInput.push(arrayCombineIntoNum(numInput));
-        //println(valuesOfInput[0]);
         numInput = [];
         a = 0;
         z = 3;
