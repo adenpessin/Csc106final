@@ -881,5 +881,7 @@ draw = function()
         textAlign(RIGHT,CENTER);//makes text appear like a calc
         calcNumDisplay(508,47);//displays what needs to be shown(x,y)
         changeOpColor();//function for changing the op color 
+        drawBitmoji(527,428,62);
+        bitMoji(42,106,42);
     }
 };
