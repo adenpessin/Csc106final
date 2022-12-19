@@ -256,7 +256,7 @@ Button.prototype.draw = function() //button draw function
     fill(0, 0, 0);
     textSize(26);
     textAlign(CENTER, TOP);
-    text(this.butText, this.x+50, this.y+(this.height/2)-12);
+    text(this.butText, this.x+44, this.y+(this.height/2)-12);
 };
 Button.prototype.isMouseInside = function() //determines if the mouse is over a button
 {
@@ -293,10 +293,10 @@ var defOpColors = {r:129,g:206, b:227}; //default op colors
 var wasOpPressed = false;//if true, triggers change in color of op.
 var btnStart = new Button
 ({
-    x: 239,
-    y: 278,
+    x: 154,
+    y: 201,
     width: 100,
-    height: 63,
+    height: 40,
     color: color(149, 122, 230),
     butText: "Start",
     onClick: function()
@@ -312,7 +312,7 @@ var startScene = function(x,y)
         var syms = ["+","-","×","÷"];
         textSize(96);
         fill(222, 24, 24);
-        text(syms[i],x+(i*134),y+-64);
+        text(syms[i],x+13+(i*112),y+17);
     }
     fill(136, 112, 138);
     rect(x+144,y+167,94,27);
@@ -337,29 +337,29 @@ var startScene = function(x,y)
     rect(x+216,y+202,18,18);
     textSize(15);
     fill(255, 0, 0);
-    text("+",x+223,y+202);
-    text("-",x+220,y+225);
-    text("x",x+221,y+251);
-    text("/",x+221,y+275);
-    text("1",x+151,y+201);
-    text("2",x+174,y+201);
-    text("3",x+197,y+201);
-    text("4",x+151,y+225);
-    text("5",x+173,y+225);
-    text("6",x+196,y+225);
-    text("7",x+153,y+251);
-    text("8",x+174,y+250);
-    text("9",x+196,y+251);
-    text("0",x+177,y+276);
-    text("C",x+155,y+276);
-    text("=",x+198,y+275);
+    text("+",x+224,y+202);
+    text("-",x+224,y+225);
+    text("x",x+224,y+251);
+    text("÷",x+224,y+275);
+    text("1",x+156,y+201);
+    text("2",x+178,y+201);
+    text("3",x+201,y+201);
+    text("4",x+156,y+225);
+    text("5",x+178,y+225);
+    text("6",x+201,y+225);
+    text("7",x+156,y+251);
+    text("8",x+178,y+250);
+    text("9",x+201,y+251);
+    text("0",x+178,y+276);
+    text("C",x+156,y+276);
+    text("=",x+201,y+275);
     fill(0, 0, 0);
-    textSize(33);
-    text("Aden Pessin & Yan Pan's", x+201,y+-145);
-    text("Calculator App", x+201,y+-89);
+    textSize(26);
+    text("Aden Pessin & Yan Pan's", x+168,y+-45);
+    text("Calculator App", x+172,y+7);
     btnStart.draw();
-    drawBitmoji(x+310,y+143,102);
-    bitMoji(x+-9,y+299,69);
+    drawBitmoji(x+271,y+143,79);
+    bitMoji(x+33,y+273,57);
 
 };//what shows in scene 1
 
@@ -369,10 +369,10 @@ for (var i = 0; i <= 3; i++) //creates calc buttons, pushes them into array
     {
         var calculatorButtons = new Button
         ({
-            x: 76 + 112 * i,
-            y: 115 + 112 * j,
-            width: 110,
-            height: 110,
+            x: 33 + 86 * i,
+            y: 97 + 74 * j,
+            width: 86,
+            height: 73,
             butText: butSymbols[i+j*4],
             color:color(defOpColors.r,defOpColors.g,defOpColors.b),
         });
@@ -643,7 +643,7 @@ calcButtons[12].onClick = function() // "+" button
         z = 1;
         answer = null;
         keepPastAnswerShown = true;
-    }/*after "=" pressed, theres a past answer is pushed to values
+    }/*after "=" pressed, theres a past answer, which is pushed to values
     of input*/
     else if (z === 0)
     {
@@ -667,9 +667,8 @@ calcButtons[12].onClick = function() // "+" button
 };
 calcButtons[13].onClick = function() // "-" button
 {
-    //if equals was pressed, then a operator is pressed, it uses the past answer
     wasOpPressed = true;
-    if (z === 0 && pastAnswer !== 0) // 
+    if (z === 0 && pastAnswer !== 0) //if equals was pressed, then "-" is pressed, it uses the past answer
     {
         valuesOfInput.push(pastAnswer);
         numInput = [];
@@ -678,7 +677,7 @@ calcButtons[13].onClick = function() // "-" button
         answer = null;
         keepPastAnswerShown = true;
     }
-    else if (z === 0)
+    else if (z === 0)//combines the numbers inputed and puts it in valuesOfInput
     {
         valuesOfInput.push(arrayCombineIntoNum(numInput));
         numInput = [];
@@ -688,7 +687,7 @@ calcButtons[13].onClick = function() // "-" button
         keepAShown = true;
     }
     else if (z === 2)
-    {
+    {//allows continuous input of numbers if its ONLY that operator active
         valuesOfInput.push(arrayCombineIntoNum(numInput));
         numInput = [];
         b = 0;
@@ -699,7 +698,7 @@ calcButtons[13].onClick = function() // "-" button
 calcButtons[14].onClick = function() // "X" button
 {
     wasOpPressed = true;
-    if (z === 0 && pastAnswer !== 0)
+    if (z === 0 && pastAnswer !== 0)//if equals was pressed, then "x" is pressed, it uses the past answer
     {
         valuesOfInput.push(pastAnswer);
         numInput = [];
@@ -708,7 +707,7 @@ calcButtons[14].onClick = function() // "X" button
         answer = null;
         keepPastAnswerShown = true;
     }
-    else if (z === 0)
+    else if (z === 0)//if theres no past answer, set z to 3 and send all the numbers inputed
     {
         valuesOfInput.push(arrayCombineIntoNum(numInput));
         numInput = [];
@@ -861,26 +860,26 @@ draw = function()
 {
     if (sceneNum === 1)
     {
-        startScene(99,211);
+        startScene(16,88);
     }
     else if (sceneNum === 2)
     {
         stroke(0, 0, 0);
         strokeWeight(5);//adds lines around everything
         fill(120, 4, 4);//red background color
-        rect(2, 2, 595,595);//black border around calc
-        for (var i = 0; i < calcButtons.length; i++)
+        rect(2, 2, 395,395);//black border around calc
+        for (var i = 0; i < calcButtons.length; i++)//draws buttons
         {
             calcButtons[i].draw();
-        }//draws buttons
+        }
         fill(79, 75, 75);// dark grey color for answer box
-        rect(79,10,440,76);//answer box
+        rect(46,10,318,76);//answer box
         textSize(20);
         fill(255, 255, 255);//white text color
         textAlign(RIGHT,CENTER);//makes text appear like a calc
-        calcNumDisplay(508,47);//displays what needs to be shown(x,y)
+        calcNumDisplay(354,47);//displays what needs to be shown(x,y)
         changeOpColor();//function for changing the op color 
-        drawBitmoji(527,428,62);
-        bitMoji(42,106,42);
+        drawBitmoji(350,54,43);//yans bitmoji on calculator
+        bitMoji(27,121,26);//adens bitmoji on calculator
     }
 };
