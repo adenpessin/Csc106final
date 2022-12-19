@@ -361,7 +361,7 @@ var startScene = function(x,y)
     drawBitmoji(x+310,y+143,102);
     bitMoji(x+-9,y+299,69);
 
-};//what happens in scene 1
+};//what shows in scene 1
 
 for (var i = 0; i <= 3; i++) //creates calc buttons, pushes them into array
 {
@@ -473,7 +473,7 @@ mouseClicked = function()//mouseclicked function
     {
         btnStart.handleMouseClick();
     }
-    else if (sceneNum === 2)
+    else if (sceneNum === 2)//if scene 2 register mouseclick
     {
         for (var i = 0; i < calcButtons.length; i++)
         {
